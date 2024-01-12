@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1075415988841",
+    "project_id": "wallet-seminarska",
+    "storage_bucket": "wallet-seminarska.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075415988841:android:d9438467ecc01b1fc080f8",
+        "android_client_info": {
+          "package_name": "com.example.wallet.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQa_6TRYyagSMjPGOYCOoCDf9HtNTom5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075415988841:android:8ee909800c4e450fc080f8",
+        "android_client_info": {
+          "package_name": "com.example.wallet_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQa_6TRYyagSMjPGOYCOoCDf9HtNTom5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
