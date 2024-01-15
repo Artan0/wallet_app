@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.wallet_app.R
@@ -16,6 +17,7 @@ class CryptoAdapter(private var cryptoList: List<Crypto>) : RecyclerView.Adapter
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         val symbolTextView: TextView = itemView.findViewById(R.id.symbolTextView)
         val priceTextView: TextView = itemView.findViewById(R.id.priceTextView)
+        val changeTextView: TextView = itemView.findViewById(R.id.changePercentageTextView) // Add this line
 //        val logoImageView: ImageView = itemView.findViewById(R.id.logoImageView)
     }
 
@@ -34,6 +36,16 @@ class CryptoAdapter(private var cryptoList: List<Crypto>) : RecyclerView.Adapter
         holder.nameTextView.text = crypto.name
         holder.symbolTextView.text = crypto.symbol
         holder.priceTextView.text = "$${crypto.price}"
+        holder.changeTextView.text = String.format("%.2f%%", crypto.changePercentage)
+
+        // Set text color based on change percentage
+        val textColorResId = when {
+            crypto.changePercentage > 0 -> R.color.green // Change to the color resource ID for green
+            crypto.changePercentage < 0 -> R.color.red // Change to the color resource ID for red
+            else -> R.color.wallet_text_color // Default text color
+        }
+
+        holder.changeTextView.setTextColor(ContextCompat.getColor(holder.changeTextView.context, textColorResId))
 
 //        // Load logo image using Glide (make sure to add the Glide dependency to your app's build.gradle)
 //        Glide.with(holder.logoImageView.context)

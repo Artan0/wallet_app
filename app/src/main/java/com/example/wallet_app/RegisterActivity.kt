@@ -2,11 +2,14 @@ package com.example.wallet_app
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.google.firebase.FirebaseApp
+import com.example.wallet_app.model.Wallet
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -39,17 +42,34 @@ class RegisterActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Registration successful
+                    // Registration successful, send verification email
+                    Toast.makeText(this, "Registration successful. Please check your email for verification", Toast.LENGTH_SHORT).show()
                     sendEmailVerification()
+                    // Create a wallet document for the user in Firestore
+                    createWalletDocument()
                 } else {
-                    Toast.makeText(
-                        this,
-                        "Registration failed: ${task.exception?.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
+    private fun createWalletDocument() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val wallet = Wallet(userId)
+            val db = Firebase.firestore //check dependencies
+            db.collection("wallets")
+                .document(userId)
+                .set(wallet)
+                .addOnSuccessListener {
+                    Log.d("Firestore", "Wallet document created successfully")
+                }
+                .addOnFailureListener {
+                    Log.e("Firestore", "Error creating wallet document", it)
+                }
+        }
+    }
+
 
     private fun sendEmailVerification() {
         val user = FirebaseAuth.getInstance().currentUser

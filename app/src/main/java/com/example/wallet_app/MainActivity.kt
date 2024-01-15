@@ -4,13 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 
-class MainActivity : AppCompatActivity() {
+ class MainActivity : AppCompatActivity() {
 
-    private lateinit var registerButton:Button
-    private lateinit var loginButton: Button
+
+    private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,23 +19,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         auth = FirebaseAuth.getInstance()
 
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
+
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.home -> {
+                    // Handle Home action
+                    startActivity(Intent(this, HomeActivity::class.java))
+                    true
+                }
+                R.id.wallet -> {
+                    // Handle Wallet action
+//                    startActivity(Intent(this, WalletActivity::class.java))
+                    true
+                }
+                // Add more cases for other menu items
+                else -> false
+            }
+        }
+
         val currentUser = auth.currentUser
         if (currentUser != null) {
             navigateToHome()
         } else {
             navigateToIntroduction()
-        }
-
-        registerButton = findViewById(R.id.buttonRegister)
-        loginButton = findViewById(R.id.buttonLogin)
-
-        registerButton.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-        }
-        loginButton.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java )
-            startActivity(intent)
         }
     }
     private fun navigateToHome() {
