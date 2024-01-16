@@ -29,7 +29,7 @@ class HomeActivity : AppCompatActivity(){
     private lateinit var totalBalance: TextView
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var auth: FirebaseAuth
-
+    private lateinit var recyclerView: RecyclerView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,12 +49,11 @@ class HomeActivity : AppCompatActivity(){
                     finish()
                     true
                 }
-                // Add more cases for other menu items
                 else -> false
             }
         }
 
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+        recyclerView = findViewById(R.id.recyclerView)
         cryptoAdapter = CryptoAdapter(emptyList())
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -65,20 +64,17 @@ class HomeActivity : AppCompatActivity(){
         totalBalance = findViewById(R.id.totalBalance)
         auth = FirebaseAuth.getInstance()
 
-        // Set the username text
         usernameText.text = auth.currentUser?.email?.substringBefore('@') ?: "Unknown User"
 
         // Logout button click listener
         logoutButton.setOnClickListener {
-            // Sign out the user
             auth.signOut()
 
-            // Navigate to LoginActivity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }
-        // Retrieve user's wallet information and update UI
+        // Retrieve user's wallet information
         retrieveUserWallet()
         fetchData()
     }
@@ -93,9 +89,8 @@ class HomeActivity : AppCompatActivity(){
                         name = crypto.name,
                         symbol = crypto.symbol,
                         price = crypto.current_price,
-                        logoUrl = "https://example.com/logos/${crypto.symbol.toLowerCase()}.png",
+//                        logoUrl = "https://example.com/logos/${crypto.symbol.toLowerCase()}.png",
                         changePercentage = crypto.price_change_percentage_24h ?: 0.0
-
                     )
                 }
 
@@ -130,7 +125,6 @@ class HomeActivity : AppCompatActivity(){
     }
 
     private fun updateBalanceUI(balance: Double) {
-        // Update the balance text view
         totalBalance.text = String.format("Total Balance: $%.2f", balance)
     }
 
