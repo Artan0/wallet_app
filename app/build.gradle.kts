@@ -4,9 +4,11 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+
 android {
     namespace = "com.example.wallet_app"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "com.example.wallet_app"
@@ -66,7 +68,7 @@ dependencies {
     //google login
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.android.material:material:1.11.0")
-
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 
 }

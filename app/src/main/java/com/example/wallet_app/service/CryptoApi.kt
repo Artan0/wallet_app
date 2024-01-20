@@ -1,8 +1,10 @@
 package com.example.wallet_app.service
 
-import com.example.wallet_app.model.Crypto
 import com.example.wallet_app.model.CryptoApiResponse
+import com.example.wallet_app.model.CryptoDetails
+import com.example.wallet_app.model.HistoricalMarketDataResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CryptoApi {
@@ -14,4 +16,17 @@ interface CryptoApi {
         @Query("page") page: Int = 1,
         @Query("sparkline") sparkline: Boolean = false
     ): List<CryptoApiResponse>
+
+    @GET("coins/{id}")
+    suspend fun getCryptoById(
+        @Path("id") id: String,
+        @Query("vs_currency") currency: String = "usd"
+    ): CryptoDetails
+    @GET("coins/{id}/market_chart")
+    suspend fun getHistoricalMarketData(
+        @Path("id") id: String,
+        @Query("vs_currency") currency: String = "usd",
+        @Query("days") days: Int,
+//        @Query("interval") interval: String
+    ): HistoricalMarketDataResponse
 }

@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.wallet_app.R
 import com.example.wallet_app.model.Crypto
+import com.example.wallet_app.model.CryptoApiResponse
 
-class CryptoAdapter(private var cryptoList: List<Crypto>) : RecyclerView.Adapter<CryptoAdapter.ViewHolder>() {
+class CryptoAdapter(private val onItemClick: (CryptoApiResponse) -> Unit) : RecyclerView.Adapter<CryptoAdapter.ViewHolder>() {
+    private var cryptoList: List<CryptoApiResponse> = emptyList()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
@@ -21,7 +23,7 @@ class CryptoAdapter(private var cryptoList: List<Crypto>) : RecyclerView.Adapter
 //        val logoImageView: ImageView = itemView.findViewById(R.id.logoImageView)
     }
 
-    fun updateData(newCryptoList: List<Crypto>) {
+    fun updateData(newCryptoList: List<CryptoApiResponse>) {
         cryptoList = newCryptoList
         notifyDataSetChanged()
     }
@@ -35,22 +37,27 @@ class CryptoAdapter(private var cryptoList: List<Crypto>) : RecyclerView.Adapter
         val crypto = cryptoList[position]
         holder.nameTextView.text = crypto.name
         holder.symbolTextView.text = crypto.symbol
-        holder.priceTextView.text = "$${crypto.price}"
-        holder.changeTextView.text = String.format("%.2f%%", crypto.changePercentage)
+        holder.priceTextView.text = "$${crypto.current_price}"
+        holder.changeTextView.text = String.format("%.2f%%", crypto.price_change_percentage_24h)
 
         // Set text color based on change percentage
         val textColorResId = when {
-            crypto.changePercentage > 0 -> R.color.green // Change to the color resource ID for green
-            crypto.changePercentage < 0 -> R.color.red // Change to the color resource ID for red
+            crypto.price_change_percentage_24h > 0 -> R.color.green // Change to the color resource ID for green
+            crypto.price_change_percentage_24h < 0 -> R.color.red // Change to the color resource ID for red
             else -> R.color.wallet_text_color // Default text color
         }
 
         holder.changeTextView.setTextColor(ContextCompat.getColor(holder.changeTextView.context, textColorResId))
-
+        holder.itemView.setOnClickListener {
+            onItemClick.invoke(crypto) // Pass the crypto ID instead of symbol
+        }
 //        // Load logo image using Glide (make sure to add the Glide dependency to your app's build.gradle)
 //        Glide.with(holder.logoImageView.context)
 //            .load(getLogoUrl(crypto.symbol)) // Use the method to get the logo URL
 //            .into(holder.logoImageView)
+//        holder.itemView.setOnClickListener {
+//            onItemClick.invoke(crypto.id)
+//        }
     }
 
     private fun getLogoUrl(symbol: String): String {

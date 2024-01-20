@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wallet_app.adapters.CryptoAdapter
 import com.example.wallet_app.model.Crypto
+import com.example.wallet_app.model.CryptoApiResponse
 import com.example.wallet_app.model.Wallet
 import com.example.wallet_app.objects.RetrofitClient
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -54,8 +55,15 @@ class HomeActivity : AppCompatActivity(){
         }
 
         recyclerView = findViewById(R.id.recyclerView)
-        cryptoAdapter = CryptoAdapter(emptyList())
 
+        cryptoAdapter = CryptoAdapter { crypto ->
+            val intent = Intent(this, CryptoDetailsActivity::class.java)
+            intent.putExtra("crypto_id", crypto.id)
+            startActivity(intent)
+        }
+
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = cryptoAdapter
 
@@ -85,12 +93,13 @@ class HomeActivity : AppCompatActivity(){
                 val cryptoList = RetrofitClient.cryptoApi.getCryptoList()
 
                 val cryptoListWithLogos = cryptoList.map { crypto ->
-                    Crypto(
+                    CryptoApiResponse(
+                        id = crypto.id,
                         name = crypto.name,
                         symbol = crypto.symbol,
-                        price = crypto.current_price,
+                        current_price = crypto.current_price,
 //                        logoUrl = "https://example.com/logos/${crypto.symbol.toLowerCase()}.png",
-                        changePercentage = crypto.price_change_percentage_24h ?: 0.0
+                        price_change_percentage_24h = crypto.price_change_percentage_24h ?: 0.0
                     )
                 }
 
