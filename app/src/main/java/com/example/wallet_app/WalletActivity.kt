@@ -1,9 +1,11 @@
 package com.example.wallet_app
 
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
@@ -25,6 +27,7 @@ class WalletActivity : AppCompatActivity() {
     private lateinit var receiveMoneyButton: Button
     private lateinit var allTransactionsButton: Button
     private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var addCardButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +37,9 @@ class WalletActivity : AppCompatActivity() {
         sendMoneyButton = findViewById(R.id.sendMoneyButton)
         receiveMoneyButton = findViewById(R.id.receiveMoneyButton)
         allTransactionsButton = findViewById(R.id.allTransactionsButton)
+        addCardButton = findViewById(R.id.addCardButton)
 
+        addCardButton.setOnClickListener { showAddCardDialog() }
         sendMoneyButton.setOnClickListener { onSendMoneyClicked() }
         receiveMoneyButton.setOnClickListener { onReceiveMoneyClicked() }
         allTransactionsButton.setOnClickListener { onAllTransactionsClicked() }
@@ -111,4 +116,23 @@ class WalletActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
     }
+    private fun showAddCardDialog() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_add_card)
+
+        val submitCardButton: Button = dialog.findViewById(R.id.submitCardButton)
+        submitCardButton.setOnClickListener { onSubmitCardClicked(dialog) }
+
+        dialog.show()
+    }
+
+    private fun onSubmitCardClicked(dialog: Dialog) {
+
+        dialog.dismiss()
+    }
+
+    fun onAddCardClicked(view: View) {
+        showAddCardDialog()
+    }
+
 }

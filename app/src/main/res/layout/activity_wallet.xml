@@ -7,6 +7,40 @@
     android:layout_height="match_parent"
     android:background="@color/wallet_background_color_secondary"
     tools:context=".WalletActivity">
+    <!-- Add these to your existing layout -->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="327dp"
+        android:layout_height="194dp"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.168"
+        app:cardCornerRadius="16dp">
+
+        <ImageView
+            android:id="@+id/creditCardImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/card_template"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+
+
+
+    <Button
+        android:id="@+id/addCardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="onAddCardClicked"
+        android:text="Add Card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.947"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     <TextView
         android:id="@+id/balanceInfoText"
@@ -17,11 +51,10 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/buttonsGrid"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.109"
+        app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.363" />
-
+        app:layout_constraintVertical_bias="0.923" />
 
     <TextView
         android:id="@+id/balanceTextView"
@@ -32,24 +65,25 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/buttonsGrid"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.083"
+        app:layout_constraintStart_toEndOf="@+id/balanceInfoText"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.784" />
+        app:layout_constraintVertical_bias="0.933" />
 
     <GridLayout
         android:id="@+id/buttonsGrid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/balanceTextView"
-        android:layout_marginTop="112dp"
-        android:padding="10dp"
+        android:layout_marginTop="68dp"
         android:columnCount="3"
         android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/cardView">
 
         <Button
             android:id="@+id/sendMoneyButton"
@@ -78,11 +112,10 @@
             android:text="History" />
     </GridLayout>
 
-
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="257dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -94,12 +127,14 @@
         android:id="@+id/tabs"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/wallet_background_color"
         app:layout_constraintBottom_toTopOf="@+id/viewPager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonsGrid"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.033"
+        app:tabTextColor="@color/wallet_text_color" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

@@ -1,0 +1,15 @@
+<!-- dialog_add_card.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Add input fields for card details (e.g., card number, expiration date, CVV) -->
+
+    <Button
+        android:id="@+id/submitCardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:onClick="onSubmitCardClicked" />
+</LinearLayout>
