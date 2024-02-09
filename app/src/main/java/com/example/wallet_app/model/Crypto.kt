@@ -1,8 +1,12 @@
 package com.example.wallet_app.model
 
 data class Crypto(
-    val name: String,
-    val symbol: String,
-    val price: Double,
-    //    val logoUrl: String,
-    val changePercentage: Double)
+    // Properties with default values
+    var id: String = "",
+    var name: String = "",
+    var symbol: String = "",
+    var price: Double = 0.0,
+    var changePercentage: Double = 0.0,
+    var amount: Double = 0.0
+)
+

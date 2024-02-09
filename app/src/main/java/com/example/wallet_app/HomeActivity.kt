@@ -99,7 +99,7 @@ class HomeActivity : AppCompatActivity(){
                         symbol = crypto.symbol,
                         current_price = crypto.current_price,
 //                        logoUrl = "https://example.com/logos/${crypto.symbol.toLowerCase()}.png",
-                        price_change_percentage_24h = crypto.price_change_percentage_24h ?: 0.0
+                        price_change_percentage_24h = crypto.price_change_percentage_24h ?: 0.0,
                     )
                 }
 

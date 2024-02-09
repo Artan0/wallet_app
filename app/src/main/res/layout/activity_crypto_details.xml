@@ -62,7 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal"
+        android:id="@+id/amountText"
         android:layout_width="154dp"
         android:layout_height="70dp"
         android:layout_above="@id/sellButton"
@@ -80,7 +80,7 @@
         app:layout_constraintTop_toBottomOf="@+id/lineChart" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal2"
+        android:id="@+id/priceText"
         android:layout_width="154dp"
         android:layout_height="70dp"
         android:layout_above="@id/buyButton"
@@ -96,6 +96,30 @@
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lineChart" />
+
+    <TextView
+        android:id="@+id/userAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/wallet_text_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/priceText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.846"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/userBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/wallet_text_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/amountText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.073"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

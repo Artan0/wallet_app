@@ -65,9 +65,9 @@ class CryptoHoldingsFragment : Fragment() {
         }
 
         val dummyCryptoHoldings = listOf(
-            Crypto("Bitcoin", "BTC", 45000.0, 1.5 * 45000.0),
-            Crypto("Ethereum", "ETH", 3000.0, 5.2 * 3000.0),
-            Crypto("Litecoin", "LTC", 150.0, 10.0 * 150.0)
+            Crypto("Bitcoin", "BTC", "",45000.0, 1.5 * 45000.0, 2.1),
+            Crypto("Ethereum", "ETH","", 3000.0, 5.2 * 3000.0, 2.3),
+            Crypto("Litecoin", "LTC", "",150.0, 10.0 * 150.0, 4.3)
         )
         updateCryptoHoldingsUI(dummyCryptoHoldings)
 
