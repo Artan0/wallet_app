@@ -14,6 +14,7 @@ class CryptoHoldingsAdapter(private var cryptoHoldings: List<Crypto>) : Recycler
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         val symbolTextView: TextView = itemView.findViewById(R.id.symbolTextView)
         val priceTextView: TextView = itemView.findViewById(R.id.priceTextView)
+        val amountTextView: TextView = itemView.findViewById(R.id.amountText)
     }
 
     fun updateData(newCryptoHoldings: List<Crypto>) {
@@ -31,6 +32,7 @@ class CryptoHoldingsAdapter(private var cryptoHoldings: List<Crypto>) : Recycler
         holder.nameTextView.text = crypto.name
         holder.symbolTextView.text = crypto.symbol
         holder.priceTextView.text = "$${crypto.price}"
+        holder.amountTextView.text = crypto.amount.toString()
     }
 
     override fun getItemCount(): Int {

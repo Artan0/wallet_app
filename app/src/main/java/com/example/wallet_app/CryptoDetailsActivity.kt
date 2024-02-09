@@ -46,6 +46,7 @@ class CryptoDetailsActivity : AppCompatActivity() {
     private lateinit var priceText: EditText
     private lateinit var userAmountTextView: TextView
     private lateinit var userBalanceTextView: TextView
+    private var cryptoApiResponse: Crypto = Crypto()
 
 
     @SuppressLint("MissingInflatedId")
@@ -63,6 +64,7 @@ class CryptoDetailsActivity : AppCompatActivity() {
         userBalanceTextView = findViewById(R.id.userBalance)
 
         val cryptoId = intent.getStringExtra("crypto_id")
+
         buyButton.setOnClickListener {
             if (cryptoId != null) {
                 buyCrypto(cryptoId)
@@ -83,85 +85,81 @@ class CryptoDetailsActivity : AppCompatActivity() {
 
 
     private fun buyCrypto(cryptoId: String) {
-        // Retrieve the amount from the EditText field
         val amount = amountText.text.toString().toDoubleOrNull() ?: return
         val price = priceText.text.toString().toDoubleOrNull() ?: return
-        // Generate a CryptoApiResponse object
-        val cryptoApiResponse = Crypto(
-            id = cryptoId,
-            name = "", // You may need to fetch this information from the API separately
-            symbol = "", // You may need to fetch this information from the API separately
-            price = price, // You may need to fetch this information from the API separately
-            changePercentage = 0.0, // You may need to fetch this information from the API separately
-            amount = amount
-        )
 
-        // Retrieve the user's wallet
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId != null) {
-            val db = Firebase.firestore
-            val walletRef = db.collection("wallets").document(userId)
+        // Fetch additional information from the API
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val cryptoDetails = RetrofitClient.cryptoApi.getCryptoById(cryptoId)
 
-            // Update the user's balance and add the crypto to the cryptoHoldings list
-            db.runTransaction { transaction ->
-                val wallet = transaction.get(walletRef).toObject(Wallet::class.java)
+                Log.d("BuyCrypto", "CryptoDetails: $cryptoDetails")
 
-                if (wallet != null) {
-                    // Check if the user has enough balance
-                    val totalCost = amount * cryptoApiResponse.price
-                    if (wallet.balance >= totalCost) {
-                        // Deduct the cost from the balance
-                        wallet.balance -= totalCost
+                cryptoApiResponse.id = cryptoId
+                cryptoApiResponse.name = cryptoDetails.name
+                cryptoApiResponse.symbol = cryptoDetails.symbol
+                cryptoApiResponse.price = price
+                cryptoApiResponse.changePercentage = cryptoDetails.priceChangePercentage24h
+                cryptoApiResponse.amount = amount
 
-                        // Add the crypto to the cryptoHoldings list
-                        if (wallet.cryptoHoldings == null) {
-                            wallet.cryptoHoldings = mutableListOf()
+                // Retrieve the user's wallet
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                if (userId != null) {
+                    val db = Firebase.firestore
+                    val walletRef = db.collection("wallets").document(userId)
+
+                    db.runTransaction { transaction ->
+                        val wallet = transaction.get(walletRef).toObject(Wallet::class.java)
+
+                        if (wallet != null) {
+                            // Check if the user has enough balance
+                            val totalCost = amount * cryptoApiResponse.price
+                            if (wallet.balance >= totalCost) {
+                                wallet.balance -= totalCost
+
+                                if (wallet.cryptoHoldings == null) {
+                                    wallet.cryptoHoldings = mutableListOf()
+                                }
+                                wallet.cryptoHoldings?.add(cryptoApiResponse)
+
+                                transaction.set(walletRef, wallet)
+
+                                runOnUiThread {
+                                    updateBalance(wallet)
+                                    showSnackbar("Buy successful!")
+                                }
+                            } else {
+                                  runOnUiThread {
+                                    showSnackbar("Insufficient balance!")
+                                }
+                            }
                         }
-                        wallet.cryptoHoldings?.add(cryptoApiResponse)
 
-                        // Update the wallet in Firestore
-                        transaction.set(walletRef, wallet)
-
-                        // Update the UI with the new balance on the main thread
-                        runOnUiThread {
-                            updateBalance(wallet)
-                            showSnackbar("Buy successful!")
-                        }
-                    } else {
-                        // User doesn't have enough balance
-                        // Handle the case accordingly (e.g., show an error message) on the main thread
-                        runOnUiThread {
-                            showSnackbar("Insufficient balance!")
-                        }
+                        null
                     }
+                        .addOnSuccessListener {
+                            Log.d("Firestore", "Transaction success!")
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("Firestore", "Transaction failure", exception)
+                            runOnUiThread {
+                                showSnackbar("Buy failed. Please try again.")
+                            }
+                        }
                 }
-
-                null
+            } catch (e: Exception) {
+                e.printStackTrace()
+                runOnUiThread {
+                    showSnackbar("Error fetching crypto details. Please try again.")
+                }
             }
-                .addOnSuccessListener {
-                    Log.d("Firestore", "Transaction success!")
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("Firestore", "Transaction failure", exception)
-                    // Handle the transaction failure accordingly (e.g., show an error message)
-                    showSnackbar("Buy failed. Please try again.")
-                }
         }
     }
+
 
     private fun sellCrypto(cryptoId: String) {
-        // Retrieve the amount from the EditText field
         val amount = amountText.text.toString().toDoubleOrNull() ?: return
         val price = priceText.text.toString().toDoubleOrNull() ?: return
-        // Generate a CryptoApiResponse object
-        val cryptoApiResponse = Crypto(
-            id = cryptoId,
-            name = "", // You may need to fetch this information from the API separately
-            symbol = "", // You may need to fetch this information from the API separately
-            price = price, // You may need to fetch this information from the API separately
-            changePercentage = 0.0, // You may need to fetch this information from the API separately
-            amount = amount
-        )
 
         // Retrieve the user's wallet
         val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -169,52 +167,55 @@ class CryptoDetailsActivity : AppCompatActivity() {
             val db = Firebase.firestore
             val walletRef = db.collection("wallets").document(userId)
 
-            // Update the user's balance and remove the sold crypto from the cryptoHoldings list
-            db.runTransaction { transaction ->
-                val wallet = transaction.get(walletRef).toObject(Wallet::class.java)
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val cryptoDetails = RetrofitClient.cryptoApi.getCryptoById(cryptoId)
 
-                if (wallet != null) {
-                    // Check if the user has enough of the crypto to sell
-                    val cryptoHolding = wallet.cryptoHoldings?.find { it.id == cryptoId }
-                    if (cryptoHolding != null && cryptoHolding.amount >= amount) {
-                        // Add the sale amount to the balance
-                        val saleAmount = amount * cryptoApiResponse.price
-                        wallet.balance += saleAmount
+                    db.runTransaction { transaction ->
+                        val wallet = transaction.get(walletRef).toObject(Wallet::class.java)
 
-                        // Deduct the sold crypto from the cryptoHoldings list
-                        cryptoHolding.amount -= amount
+                        if (wallet != null) {
+                            val cryptoHolding = wallet.cryptoHoldings?.find { it.id == cryptoId }
+                            if (cryptoHolding != null && cryptoHolding.amount >= amount) {
+                                val saleAmount = amount * cryptoDetails.currentPrice
+                                wallet.balance += saleAmount
 
-                        // If the crypto amount becomes zero, remove it from the list
-                        if (cryptoHolding.amount == 0.0) {
-                            wallet.cryptoHoldings?.remove(cryptoHolding)
+                                cryptoHolding.amount -= amount
+
+                                if (cryptoHolding.amount == 0.0) {
+                                    wallet.cryptoHoldings?.remove(cryptoHolding)
+                                }
+
+                                transaction.set(walletRef, wallet)
+
+                                runOnUiThread {
+                                    updateBalance(wallet)
+                                    showSnackbar("Sell successful!")
+                                }
+                            } else {
+                                runOnUiThread {
+                                    showSnackbar("Insufficient crypto holdings for sale!")
+                                }
+                            }
                         }
 
-                        // Update the wallet in Firestore
-                        transaction.set(walletRef, wallet)
-
-                        // Update the UI with the new balance
-                        updateBalance(wallet)
-                        showSnackbar("Sell successful!")
-
-                    } else {
-                        // User doesn't have enough of the crypto to sell
-                        // Handle the case accordingly (e.g., show an error message)
-                        showSnackbar("Insufficient crypto holdings for sale!")
+                        null
                     }
-                }
+                        .addOnSuccessListener {
+                            Log.d("Firestore", "Transaction success!")
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("Firestore", "Transaction failure", exception)
+                            showSnackbar("Sell failed. Please try again.")
+                        }
 
-                null
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
-                .addOnSuccessListener {
-                    Log.d("Firestore", "Transaction success!")
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("Firestore", "Transaction failure", exception)
-                    // Handle the transaction failure accordingly (e.g., show an error message)
-                    showSnackbar("Sell failed. Please try again.")
-                }
         }
     }
+
 
     private fun showSnackbar(message: String) {
             val view = findViewById<View>(android.R.id.content)
@@ -260,27 +261,21 @@ class CryptoDetailsActivity : AppCompatActivity() {
     }
     private fun updateBalance(wallet: Wallet?) {
         if (wallet != null) {
-            // Assuming you want to display the balance with 2 decimal places
             val formattedBalance = String.format("%.2f", wallet.balance)
 
-            // Set the formatted balance to the userBalance TextView
             userBalanceTextView.text = "Available$formattedBalance$"
 
-            // Find the crypto holding for the selected crypto (Assuming you have a variable to store the selected cryptoId)
-//            val selectedCryptoId = cryptoId // Replace with the actual selected cryptoId
+
             val selectedCryptoId  = intent.getStringExtra("crypto_id")
             val cryptoHolding = wallet.cryptoHoldings?.find { it.id == selectedCryptoId }
 
             if (cryptoHolding != null) {
-                // Set the formatted crypto amount to the userAmount TextView
                 val formattedCryptoAmount = String.format("%.2f", cryptoHolding.amount)
                 userAmountTextView.text = "Crypto $formattedCryptoAmount"
             } else {
-                // Crypto holding not found, set userAmount to default value or handle accordingly
                 userAmountTextView.text = "Crypto: N/A"
             }
         } else {
-            // Handle the case when wallet is null (e.g., user not logged in)
             userBalanceTextView.text = "Available N/A"
             userAmountTextView.text = "Crypto N/A"
         }
