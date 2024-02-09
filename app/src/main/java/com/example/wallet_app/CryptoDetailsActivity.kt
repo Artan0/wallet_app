@@ -108,7 +108,6 @@ class CryptoDetailsActivity : AppCompatActivity() {
 
                 if (wallet != null) {
                     // Check if the user has enough balance
-                    // (You may need to fetch the crypto details from the API to calculate the total cost)
                     val totalCost = amount * cryptoApiResponse.price
                     if (wallet.balance >= totalCost) {
                         // Deduct the cost from the balance
@@ -123,14 +122,17 @@ class CryptoDetailsActivity : AppCompatActivity() {
                         // Update the wallet in Firestore
                         transaction.set(walletRef, wallet)
 
-                        // Update the UI with the new balance
-                        updateBalance(wallet)
-                        showSnackbar("Buy successful!")
-
+                        // Update the UI with the new balance on the main thread
+                        runOnUiThread {
+                            updateBalance(wallet)
+                            showSnackbar("Buy successful!")
+                        }
                     } else {
                         // User doesn't have enough balance
-                        // Handle the case accordingly (e.g., show an error message)
-                        showSnackbar("Insufficient balance!")
+                        // Handle the case accordingly (e.g., show an error message) on the main thread
+                        runOnUiThread {
+                            showSnackbar("Insufficient balance!")
+                        }
                     }
                 }
 
