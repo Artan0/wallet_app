@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,11 +32,15 @@ class HomeActivity : AppCompatActivity(){
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var auth: FirebaseAuth
     private lateinit var recyclerView: RecyclerView
-
+    private lateinit var sendMoneyButton: ImageButton
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        logoutButton = findViewById(R.id.logoutButton)
+        usernameText = findViewById(R.id.usernameText)
+        totalBalance = findViewById(R.id.totalBalance)
+        sendMoneyButton = findViewById(R.id.sendMoneyButton)
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
@@ -62,14 +67,17 @@ class HomeActivity : AppCompatActivity(){
             startActivity(intent)
         }
 
+        sendMoneyButton.setOnClickListener {
+            val intent = Intent(this, TransactionActivity::class.java)
+            startActivity(intent)
+        }
+
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = cryptoAdapter
 
-        logoutButton = findViewById(R.id.logoutButton)
-        usernameText = findViewById(R.id.usernameText)
-        totalBalance = findViewById(R.id.totalBalance)
+
         auth = FirebaseAuth.getInstance()
 
         usernameText.text = auth.currentUser?.email?.substringBefore('@') ?: "Unknown User"

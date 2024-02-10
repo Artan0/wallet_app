@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Wallet_App"
         tools:targetApi="31">
         <activity
+            android:name=".TransactionActivity"
+            android:exported="false" />
+        <activity
             android:name=".CryptoDetailsActivity"
             android:exported="false" />
         <activity
