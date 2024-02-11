@@ -9,11 +9,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wallet_app.R
 import com.example.wallet_app.adapters.TransactionHistoryAdapter
+import com.example.wallet_app.model.Transaction
+import com.example.wallet_app.model.Wallet
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class TransactionHistoryFragment : Fragment() {
 
     private lateinit var transactionHistoryAdapter: TransactionHistoryAdapter
     private lateinit var recyclerView: RecyclerView
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid
+    private val firestore = FirebaseFirestore.getInstance()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,7 +39,37 @@ class TransactionHistoryFragment : Fragment() {
         recyclerView.adapter = transactionHistoryAdapter
 
         // Fetch transaction history data and update the adapter
+        fetchTransactionHistory()
 
         return view
+    }
+
+    private fun fetchTransactionHistory() {
+        userId?.let { uid ->
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val walletDoc = firestore
+                        .collection("wallets")
+                        .document(uid)
+                        .get()
+                        .await()
+
+                    if (walletDoc.exists()) {
+                        val walletData = walletDoc.toObject(Wallet::class.java)
+                        val transactions = walletData?.transactions.orEmpty()
+                        updateAdapterData(transactions)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    // Handle error
+                }
+            }
+        }
+    }
+
+    private suspend fun updateAdapterData(transactions: List<Transaction>) {
+        withContext(Dispatchers.Main) {
+            transactionHistoryAdapter.updateData(transactions)
+        }
     }
 }

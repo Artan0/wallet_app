@@ -24,9 +24,9 @@ class TransactionHistoryAdapter(private var transactions: List<Transaction>) : R
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transaction = transactions[position]
 
-        holder.transactionType.text = transaction.type.toString()
-        holder.amount.text = transaction.amount.toString()
-        holder.date.text = transaction.date
+        holder.transactionType.text = "Type: ${transaction.type}"
+        holder.amount.text = "Amount: ${transaction.amount}"
+        holder.date.text = "Date: ${transaction.date}"
     }
 
     override fun getItemCount(): Int {
