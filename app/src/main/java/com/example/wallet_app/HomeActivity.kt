@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wallet_app.adapters.CryptoAdapter
+import com.example.wallet_app.adapters.NotificationAdapter
 import com.example.wallet_app.model.Crypto
 import com.example.wallet_app.model.CryptoApiResponse
 import com.example.wallet_app.model.Wallet
@@ -33,6 +34,9 @@ class HomeActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
     private lateinit var recyclerView: RecyclerView
     private lateinit var sendMoneyButton: ImageButton
+    private lateinit var notificationButton: ImageButton
+    private lateinit var notificationAdapter: NotificationAdapter
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,8 @@ class HomeActivity : AppCompatActivity(){
         usernameText = findViewById(R.id.usernameText)
         totalBalance = findViewById(R.id.totalBalance)
         sendMoneyButton = findViewById(R.id.sendMoneyButton)
+        notificationButton = findViewById(R.id.notificationButton)
+
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
@@ -72,6 +78,10 @@ class HomeActivity : AppCompatActivity(){
             startActivity(intent)
         }
 
+        notificationAdapter = NotificationAdapter(emptyList())
+        notificationButton.setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
+        }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
