@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.wallet_app.model.Crypto
@@ -46,6 +47,8 @@ class CryptoDetailsActivity : AppCompatActivity() {
     private lateinit var priceText: EditText
     private lateinit var userAmountTextView: TextView
     private lateinit var userBalanceTextView: TextView
+    private lateinit var backButton: ImageButton
+
     private var cryptoApiResponse: Crypto = Crypto()
 
 
@@ -62,6 +65,7 @@ class CryptoDetailsActivity : AppCompatActivity() {
         priceText = findViewById(R.id.priceText)
         userAmountTextView = findViewById(R.id.userAmount)
         userBalanceTextView = findViewById(R.id.userBalance)
+        backButton = findViewById(R.id.backButton)
 
         val cryptoId = intent.getStringExtra("crypto_id")
 
@@ -79,6 +83,10 @@ class CryptoDetailsActivity : AppCompatActivity() {
             retrieveUserWallet()
             fetchCryptoDetails(cryptoId)
             fetchHistoricalMarketData(cryptoId)
+        }
+
+        backButton.setOnClickListener {
+            finish()
         }
 
     }
@@ -263,7 +271,7 @@ class CryptoDetailsActivity : AppCompatActivity() {
         if (wallet != null) {
             val formattedBalance = String.format("%.2f", wallet.balance)
 
-            userBalanceTextView.text = "Available$formattedBalance$"
+            userBalanceTextView.text = "Available $formattedBalance$"
 
 
             val selectedCryptoId  = intent.getStringExtra("crypto_id")

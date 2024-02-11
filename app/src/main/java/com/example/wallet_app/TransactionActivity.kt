@@ -1,18 +1,22 @@
 package com.example.wallet_app
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.wallet_app.model.Transaction
 import com.example.wallet_app.model.TransactionType
 import com.example.wallet_app.model.Wallet
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,10 +30,13 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var usernameEditText: EditText
     private lateinit var sendButton: Button
     private lateinit var successTextView: TextView
+    private lateinit var balanceText: TextView
+    private lateinit var backButton: ImageButton
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private val firestore = FirebaseFirestore.getInstance()
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction)
@@ -38,6 +45,14 @@ class TransactionActivity : AppCompatActivity() {
         usernameEditText = findViewById(R.id.usernameEditText)
         sendButton = findViewById(R.id.sendButton)
         successTextView = findViewById(R.id.successTextView)
+        balanceText = findViewById(R.id.balanceTextView)
+        backButton = findViewById(R.id.backButton)
+
+        backButton.setOnClickListener {
+            finish()
+        }
+        retrieveUserWallet()
+
     }
 
     // Inside the onSendButtonClick function
@@ -128,5 +143,28 @@ class TransactionActivity : AppCompatActivity() {
         return ""
     }
 
-
+    private fun retrieveUserWallet() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val db = Firebase.firestore
+            db.collection("wallets")
+                .document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val wallet = document.toObject(Wallet::class.java)
+                        // Update the UI with the user's balance
+                        updateBalance(wallet?.balance ?: 0.0)
+                    } else {
+                        Log.d("Firestore", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("Firestore", "Error getting wallet document", exception)
+                }
+        }
+    }
+    private fun updateBalance(balance: Double) {
+        balanceText.text = String.format("Available Balance $%.2f", balance)
+    }
 }

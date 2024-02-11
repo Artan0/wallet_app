@@ -9,6 +9,7 @@
     tools:context=".WalletActivity">
     <!-- Add these to your existing layout -->
 
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="327dp"
@@ -29,12 +30,11 @@
     </androidx.cardview.widget.CardView>
 
 
-
     <Button
         android:id="@+id/addCardButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:onClick="onAddCardClicked"
         android:text="Add Card"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +115,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="257dp"
+        android:layout_height="255dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
