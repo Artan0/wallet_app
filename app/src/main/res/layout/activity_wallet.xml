@@ -7,18 +7,17 @@
     android:layout_height="match_parent"
     android:background="@color/wallet_background_color_secondary"
     tools:context=".WalletActivity">
-    <!-- Add these to your existing layout -->
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="327dp"
         android:layout_height="194dp"
-        app:layout_constraintBottom_toTopOf="@+id/tabs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.4"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.168"
+        app:layout_constraintBottom_toTopOf="@+id/tabs"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="16dp">
 
         <ImageView
@@ -28,6 +27,8 @@
             android:src="@drawable/card_template"
             android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
+
+
 
 
     <Button
@@ -115,17 +116,18 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="255dp"
+        android:layout_height="235dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonsGrid"
+        app:layout_constraintTop_toBottomOf="@+id/tabs"
         app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="0dp"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
         android:background="@color/wallet_background_color"
         app:layout_constraintBottom_toTopOf="@+id/viewPager"

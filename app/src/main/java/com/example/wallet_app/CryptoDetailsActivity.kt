@@ -1,5 +1,6 @@
 package com.example.wallet_app
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -48,7 +49,7 @@ class CryptoDetailsActivity : AppCompatActivity() {
     private lateinit var userAmountTextView: TextView
     private lateinit var userBalanceTextView: TextView
     private lateinit var backButton: ImageButton
-
+    private lateinit var sendMoneyButton: ImageButton
     private var cryptoApiResponse: Crypto = Crypto()
 
 
@@ -66,6 +67,7 @@ class CryptoDetailsActivity : AppCompatActivity() {
         userAmountTextView = findViewById(R.id.userAmount)
         userBalanceTextView = findViewById(R.id.userBalance)
         backButton = findViewById(R.id.backButton)
+        sendMoneyButton = findViewById(R.id.sendMoneyButton)
 
         val cryptoId = intent.getStringExtra("crypto_id")
 
@@ -87,6 +89,10 @@ class CryptoDetailsActivity : AppCompatActivity() {
 
         backButton.setOnClickListener {
             finish()
+        }
+        sendMoneyButton.setOnClickListener {
+            val intent = Intent(this, TransactionActivity::class.java)
+            startActivity(intent)
         }
 
     }

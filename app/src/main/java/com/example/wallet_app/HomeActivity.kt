@@ -142,7 +142,7 @@ class HomeActivity : AppCompatActivity(){
     }
 
     private fun updateBalanceUI(balance: Double) {
-        totalBalance.text = String.format("Total Balance(USD) \n \n$%.2f", balance)
+        totalBalance.text = String.format("Total Balance(USD) \n$%.2f", balance)
     }
 
 }
