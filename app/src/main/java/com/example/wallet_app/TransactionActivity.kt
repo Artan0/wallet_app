@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.wallet_app.model.Transaction
 import com.example.wallet_app.model.TransactionType
 import com.example.wallet_app.model.Wallet
+import com.example.wallet_app.objects.EmailSender
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -105,6 +106,8 @@ class TransactionActivity : AppCompatActivity() {
         if (recipientUid != null) {
             // Create a transaction object
             val senderPayId = getCurrentUserPayId()
+            val senderEmail = FirebaseAuth.getInstance().currentUser?.email ?: ""
+
             val transaction = Transaction(
                 type = TransactionType.SEND,
                 amount = amount,
@@ -126,6 +129,16 @@ class TransactionActivity : AppCompatActivity() {
                     "balance", FieldValue.increment(amount),
                     "transactions", FieldValue.arrayUnion(transaction.copy(type = TransactionType.RECEIVE))
                 ).await()
+
+            // Get recipient's email from the users collection using payId
+            val recipientEmail = getUserEmailByPayId(recipientPayId)
+
+            if (senderEmail.isNotEmpty() && recipientEmail.isNotEmpty()) {
+                EmailSender.sendMoneySentEmail(senderEmail)
+                EmailSender.sendMoneyReceivedEmail(recipientEmail, amount, senderPayId)
+            } else {
+                Log.e("Transaction", "Sender or recipient email not found.")
+            }
         } else {
             // Handle the case when the recipient's UID is not found
             // You may want to show an error message or take appropriate action
@@ -166,5 +179,16 @@ class TransactionActivity : AppCompatActivity() {
     }
     private fun updateBalance(balance: Double) {
         balanceText.text = String.format("Available Balance $%.2f", balance)
+    }
+
+    private suspend fun getUserEmailByPayId(payId: String): String {
+        val userQuery = firestore.collection("users").whereEqualTo("payId", payId.trim().toLowerCase(Locale.ROOT))
+        val userDocs = userQuery.get().await()
+
+        return if (!userDocs.isEmpty) {
+            userDocs.documents.first().getString("email") ?: ""
+        } else {
+            ""
+        }
     }
 }
