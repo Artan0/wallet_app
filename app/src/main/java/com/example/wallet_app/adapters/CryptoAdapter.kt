@@ -19,7 +19,7 @@ class CryptoAdapter(private val onItemClick: (CryptoApiResponse) -> Unit) : Recy
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
         val symbolTextView: TextView = itemView.findViewById(R.id.symbolTextView)
         val priceTextView: TextView = itemView.findViewById(R.id.priceTextView)
-        val changeTextView: TextView = itemView.findViewById(R.id.changePercentageTextView) // Add this line
+        val changeTextView: TextView = itemView.findViewById(R.id.changePercentageTextView)
 //        val logoImageView: ImageView = itemView.findViewById(R.id.logoImageView)
     }
 
@@ -40,11 +40,10 @@ class CryptoAdapter(private val onItemClick: (CryptoApiResponse) -> Unit) : Recy
         holder.priceTextView.text = "$${crypto.current_price}"
         holder.changeTextView.text = String.format("%.2f%%", crypto.price_change_percentage_24h)
 
-        // Set text color based on change percentage
         val textColorResId = when {
-            crypto.price_change_percentage_24h > 0 -> R.color.green // Change to the color resource ID for green
-            crypto.price_change_percentage_24h < 0 -> R.color.red // Change to the color resource ID for red
-            else -> R.color.wallet_text_color // Default text color
+            crypto.price_change_percentage_24h > 0 -> R.color.green
+            crypto.price_change_percentage_24h < 0 -> R.color.red
+            else -> R.color.wallet_text_color
         }
 
         holder.changeTextView.setTextColor(ContextCompat.getColor(holder.changeTextView.context, textColorResId))
@@ -61,7 +60,6 @@ class CryptoAdapter(private val onItemClick: (CryptoApiResponse) -> Unit) : Recy
     }
 
     private fun getLogoUrl(symbol: String): String {
-        // Assuming logo URLs follow a certain pattern
         return "https://example.com/logos/${symbol.toLowerCase()}.png"
     }
 

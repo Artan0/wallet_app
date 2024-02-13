@@ -62,11 +62,9 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = FirebaseAuth.getInstance().currentUser
                     if (user != null && user.isEmailVerified) {
-                        // Login successful and email is verified
                         Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                         navigateToHome()
                     } else {
-                        // Email not verified, send verification email
                         sendEmailVerification()
                     }
                 } else {
@@ -126,7 +124,6 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success
                     Toast.makeText(this, "Google Sign In successful", Toast.LENGTH_SHORT).show()
                     navigateToHome()
                 } else {

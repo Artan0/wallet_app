@@ -25,7 +25,7 @@ class IntroductionActivity : AppCompatActivity() {
         getStartedButton = findViewById(R.id.getStartedButton)
 
         val fragmentList = listOf(
-            IntroductionFragment("Welcome to xBank Mobile App!", "Welcome to the first banking app in North Macedonia."),
+            IntroductionFragment("Welcome to X Wallet Mobile App!", "Welcome to the first E-Wallet app in North Macedonia."),
             IntroductionFragment("Track all of your transactions.", "Track everything and all of the transactions made."),
             IntroductionFragment("Send money to anywhere.", "Send and receive money to anywhere in the world.")
         )

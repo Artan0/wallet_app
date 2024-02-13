@@ -23,7 +23,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.notification !=null){
          generateNotification(remoteMessage.notification!!.title!!, remoteMessage.notification!!.body!!)
 
-            // Save the notification in Firestore
             saveNotificationToFirestore(
                 remoteMessage.notification!!.title!!,
                 remoteMessage.notification!!.body!!

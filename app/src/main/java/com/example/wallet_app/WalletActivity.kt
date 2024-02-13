@@ -56,11 +56,9 @@ class WalletActivity : AppCompatActivity() {
                     true
                 }
                 R.id.home -> {
-                    // Handle Home action
                     startActivity(Intent(this, HomeActivity::class.java))
                     true
                 }
-                // Add more cases for other menu items
                 else -> false
             }
         }

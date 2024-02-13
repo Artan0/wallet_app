@@ -62,7 +62,6 @@ class NotificationActivity : AppCompatActivity() {
                         notifications.add(Notification(title, content, timestamp))
                     }
 
-                    // Update the adapter with real notifications
                     notificationAdapter.updateData(notifications)
                 }
                 .addOnFailureListener { exception ->

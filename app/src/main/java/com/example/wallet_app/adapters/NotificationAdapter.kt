@@ -29,7 +29,7 @@ class NotificationAdapter(private var notifications: List<Notification>) :
 
         holder.title.text = notification.title
         holder.content.text = notification.content
-        holder.timestamp.text = notification.timestamp.toString() // Format as needed
+        holder.timestamp.text = notification.timestamp.toString()
     }
 
     override fun getItemCount(): Int {

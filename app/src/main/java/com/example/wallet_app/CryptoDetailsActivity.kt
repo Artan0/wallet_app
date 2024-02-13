@@ -102,7 +102,7 @@ class CryptoDetailsActivity : AppCompatActivity() {
         val amount = amountText.text.toString().toDoubleOrNull() ?: return
         val price = priceText.text.toString().toDoubleOrNull() ?: return
 
-        // Fetch additional information from the API
+        // Fetch information from the API
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val cryptoDetails = RetrofitClient.cryptoApi.getCryptoById(cryptoId)
@@ -126,7 +126,6 @@ class CryptoDetailsActivity : AppCompatActivity() {
                         val wallet = transaction.get(walletRef).toObject(Wallet::class.java)
 
                         if (wallet != null) {
-                            // Check if the user has enough balance
                             val totalCost = amount * cryptoApiResponse.price
                             if (wallet.balance >= totalCost) {
                                 wallet.balance -= totalCost

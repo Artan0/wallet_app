@@ -38,7 +38,6 @@ class TransactionHistoryFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = transactionHistoryAdapter
 
-        // Fetch transaction history data and update the adapter
         fetchTransactionHistory()
 
         return view
@@ -61,7 +60,6 @@ class TransactionHistoryFragment : Fragment() {
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    // Handle error
                 }
             }
         }

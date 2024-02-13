@@ -52,11 +52,9 @@ class HomeActivity : AppCompatActivity(){
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.home -> {
-                    // Handle Home action
                     true
                 }
                 R.id.wallet -> {
-                    // Handle Wallet action
                     startActivity(Intent(this, WalletActivity::class.java))
                     finish()
                     true
@@ -97,7 +95,6 @@ class HomeActivity : AppCompatActivity(){
 
         usernameText.text = auth.currentUser?.email?.substringBefore('@') ?: "Unknown User"
 
-        // Logout button click listener
         logoutButton.setOnClickListener {
             auth.signOut()
 
@@ -105,7 +102,6 @@ class HomeActivity : AppCompatActivity(){
             startActivity(intent)
             finish()
         }
-        // Retrieve user's wallet information
         retrieveUserWallet()
         fetchData()
     }

@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- Add input fields for card details (e.g., card number, expiration date, CVV) -->
 
     <Button
         android:id="@+id/submitCardButton"

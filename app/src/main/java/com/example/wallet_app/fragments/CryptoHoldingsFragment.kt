@@ -32,7 +32,6 @@ class CryptoHoldingsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = cryptoHoldingsAdapter
 
-        // Fetch crypto holdings data
         fetchCryptoHoldingsData()
 
         return view
@@ -50,7 +49,6 @@ class CryptoHoldingsFragment : Fragment() {
                         val wallet = document.toObject(Wallet::class.java)
                         val cryptoHoldings = wallet?.cryptoHoldings
                         if (cryptoHoldings != null) {
-                            // Update the UI with the user's crypto holdings
                             updateCryptoHoldingsUI(cryptoHoldings)
                         } else {
                             Log.d("Firestore", "Crypto holdings is null")

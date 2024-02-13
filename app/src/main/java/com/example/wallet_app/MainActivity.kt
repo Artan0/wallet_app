@@ -24,16 +24,12 @@ import com.google.firebase.auth.FirebaseAuth
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.home -> {
-                    // Handle Home action
                     startActivity(Intent(this, HomeActivity::class.java))
                     true
                 }
                 R.id.wallet -> {
-                    // Handle Wallet action
-//                    startActivity(Intent(this, WalletActivity::class.java))
                     true
                 }
-                // Add more cases for other menu items
                 else -> false
             }
         }

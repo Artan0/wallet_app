@@ -182,7 +182,6 @@ class TransactionActivity : AppCompatActivity() {
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         val wallet = document.toObject(Wallet::class.java)
-                        // Update the UI with the user's balance
                         updateBalance(wallet?.balance ?: 0.0)
                     } else {
                         Log.d("Firestore", "No such document")
@@ -256,7 +255,6 @@ class TransactionActivity : AppCompatActivity() {
                 usernameEditText.setText(scannedPayId)
                 amountEditText.setText(scannedAmount)
 
-                // Initiate the transaction
                 onSendButtonClick(sendButton)
             } else {
                 //  invalid scanned data

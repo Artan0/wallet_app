@@ -57,14 +57,12 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
     }
-    // Add this function to generate a unique hexadecimal payId
     private fun generateUniquePayId(): String {
-        // Generate a unique hexadecimal payId with length 6
+        // unique hexadecimal payId with length 6
         val random = (0 until 1679616).random()
         return String.format("%06x", random)
     }
 
-    // Modify the createWalletDocument function
     private fun createUserDocument(user: User) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
