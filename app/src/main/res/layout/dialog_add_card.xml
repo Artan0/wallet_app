@@ -1,14 +1,71 @@
-<!-- dialog_add_card.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="300dp"
+    android:padding="15dp"
+    android:background="@drawable/rounded_corners"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/cardsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/cardNumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:hint="Card Number"
+        />
+
+    <EditText
+        android:id="@+id/cardHolderNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:layout_marginBottom="10dp"
+        android:hint="Card Holder Name"
+        />
+
+    <EditText
+        android:id="@+id/expirationDateEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:layout_marginBottom="10dp"
+        android:hint="Expiration Date"
+        />
+
+    <EditText
+        android:id="@+id/cvvEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:layout_marginBottom="10dp"
+        android:hint="CVV"
+        />
 
     <Button
         android:id="@+id/submitCardButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Submit"
         android:onClick="onSubmitCardClicked" />
+
 </LinearLayout>
