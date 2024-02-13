@@ -1,12 +1,16 @@
 package com.example.wallet_app
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.wallet_app.model.Transaction
@@ -18,6 +22,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.WriterException
+import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,6 +42,7 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var successTextView: TextView
     private lateinit var balanceText: TextView
     private lateinit var backButton: ImageButton
+    private lateinit var qrCodeImageView: ImageView
 
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private val firestore = FirebaseFirestore.getInstance()
@@ -48,16 +58,34 @@ class TransactionActivity : AppCompatActivity() {
         successTextView = findViewById(R.id.successTextView)
         balanceText = findViewById(R.id.balanceTextView)
         backButton = findViewById(R.id.backButton)
+        qrCodeImageView = findViewById(R.id.qrCodeImageView)
+        val generateQrCodeButton: Button = findViewById(R.id.generateQrCodeButton)
+        val scanQrCodeButton: Button = findViewById(R.id.scanQrCodeButton)
+
 
         backButton.setOnClickListener {
             finish()
         }
+
+
+        generateQrCodeButton.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                val amount = amountEditText.text.toString()
+                val payId = getCurrentUserPayId()
+
+                if (payId.isNotEmpty() && amount.isNotEmpty()) {
+                    val data = "$payId|$amount"
+                    generateQrCode(data)
+                }
+            }
+        }
+
+        scanQrCodeButton.setOnClickListener {
+            initiateScan()
+        }
         retrieveUserWallet()
 
     }
-
-    // Inside the onSendButtonClick function
-    // Inside the onSendButtonClick function
     fun onSendButtonClick(view: View) {
         val amount = amountEditText.text.toString().toDoubleOrNull()
         val payId = usernameEditText.text.toString()
@@ -65,16 +93,13 @@ class TransactionActivity : AppCompatActivity() {
         if (userId != null && amount != null && amount > 0 && payId.isNotEmpty()) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    // Check if the user with the provided payId exists in Firestore
                     val userQuery = firestore.collection("users").whereEqualTo("payId", payId.trim().toLowerCase(Locale.ROOT))
                     val userDocs = userQuery.get().await()
 
                     if (!userDocs.isEmpty) {
-                        // Retrieve the recipient's UID and payId
                         val recipientUid = userDocs.documents.first().id
                         val recipientPayId = userDocs.documents.first().getString("payId") ?: ""
 
-                        // Perform the transaction
                         performTransaction(amount, recipientUid, recipientPayId)
 
                         withContext(Dispatchers.Main) {
@@ -99,12 +124,9 @@ class TransactionActivity : AppCompatActivity() {
 
 
 
-// ... (existing code)
 
-    // Inside the performTransaction function
     private suspend fun performTransaction(amount: Double, recipientUid: String?, recipientPayId: String) {
         if (recipientUid != null) {
-            // Create a transaction object
             val senderPayId = getCurrentUserPayId()
             val senderEmail = FirebaseAuth.getInstance().currentUser?.email ?: ""
 
@@ -116,21 +138,18 @@ class TransactionActivity : AppCompatActivity() {
                 receiverPayId = recipientPayId
             )
 
-            // Update sender's wallet
             firestore.collection("wallets").document(userId!!)
                 .update(
                     "balance", FieldValue.increment(-amount),
                     "transactions", FieldValue.arrayUnion(transaction)
                 ).await()
 
-            // Update recipient's wallet
             firestore.collection("wallets").document(recipientUid)
                 .update(
                     "balance", FieldValue.increment(amount),
                     "transactions", FieldValue.arrayUnion(transaction.copy(type = TransactionType.RECEIVE))
                 ).await()
 
-            // Get recipient's email from the users collection using payId
             val recipientEmail = getUserEmailByPayId(recipientPayId)
 
             if (senderEmail.isNotEmpty() && recipientEmail.isNotEmpty()) {
@@ -140,13 +159,10 @@ class TransactionActivity : AppCompatActivity() {
                 Log.e("Transaction", "Sender or recipient email not found.")
             }
         } else {
-            // Handle the case when the recipient's UID is not found
-            // You may want to show an error message or take appropriate action
             Log.e("Transaction", "Recipient UID not found.")
         }
     }
 
-    // Add this function to get the current user's payId
     private suspend fun getCurrentUserPayId(): String {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
@@ -191,4 +207,63 @@ class TransactionActivity : AppCompatActivity() {
             ""
         }
     }
+
+    private fun generateQrCode(data: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val bitMatrix = MultiFormatWriter().encode(
+                    data,
+                    BarcodeFormat.QR_CODE,
+                    400,
+                    400
+                )
+
+                val width = bitMatrix.width
+                val height = bitMatrix.height
+                val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+
+                for (x in 0 until width) {
+                    for (y in 0 until height) {
+                        bmp.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    qrCodeImageView.setImageBitmap(bmp)
+                }
+            } catch (e: WriterException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun initiateScan() {
+        IntentIntegrator(this)
+            .setOrientationLocked(false)
+            .setPrompt("Scan QR Code")
+            .initiateScan()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result: IntentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+        if (result.contents != null) {
+            val scannedData = result.contents.split("|")
+            if (scannedData.size == 2) {
+                val scannedPayId = scannedData[0]
+                val scannedAmount = scannedData[1]
+
+                usernameEditText.setText(scannedPayId)
+                amountEditText.setText(scannedAmount)
+
+                // Initiate the transaction
+                onSendButtonClick(sendButton)
+            } else {
+                //  invalid scanned data
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
 }
