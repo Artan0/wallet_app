@@ -63,7 +63,9 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <View
+        android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="4dp"
         android:background="@drawable/shadowgradient"
@@ -71,108 +73,116 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBar" />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
-        android:layout_width="406dp"
-        android:layout_height="294dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBar" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buyButton"
-        android:layout_width="120dp"
-        android:layout_height="65dp"
-        android:layout_below="@id/lineChart"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginBottom="100dp"
-        android:text="Buy"
-        android:textColor="@color/green"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountText" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/sellButton"
-        android:layout_width="120dp"
-        android:layout_height="65dp"
-        android:layout_below="@id/lineChart"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="31dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="100dp"
-        android:text="Sell"
-        android:textColor="@color/red"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@+id/priceText" />
-
-    <EditText
-        android:id="@+id/amountText"
-        android:layout_width="130dp"
-        android:layout_height="60dp"
-        android:layout_above="@id/sellButton"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="80dp"
-        android:background="@color/wallet_background_color"
-        android:ems="10"
-        android:hint="Amount"
-        android:inputType="numberDecimal"
-        android:padding="10dp"
-        android:textColor="@color/wallet_text_color"
-        android:textColorHint="@color/wallet_text_color"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lineChart" />
-
-    <EditText
-        android:id="@+id/priceText"
-        android:layout_width="130dp"
-        android:layout_height="60dp"
-        android:layout_above="@id/buyButton"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="40dp"
-        android:background="@color/wallet_background_color"
-        android:ems="10"
-        android:hint="Price"
-        android:inputType="numberDecimal"
-        android:padding="10dp"
-        android:textColor="@color/wallet_text_color"
-        android:textColorHint="@color/wallet_text_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lineChart" />
-
-    <TextView
-        android:id="@+id/userAmount"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/wallet_text_color"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/priceText"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.846"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view">
 
-    <TextView
-        android:id="@+id/userBalance"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:textColor="@color/wallet_text_color"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/amountText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.073"
-        app:layout_constraintStart_toStartOf="parent" />
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="400dp"
+            android:layout_height="294dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buyButton"
+            android:layout_width="120dp"
+            android:layout_height="65dp"
+            android:layout_below="@id/lineChart"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="50dp"
+            android:text="Buy"
+            android:textColor="@color/green"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/amountText" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sellButton"
+            android:layout_width="120dp"
+            android:layout_height="65dp"
+            android:layout_below="@id/lineChart"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="31dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="50dp"
+            android:text="Sell"
+            android:textColor="@color/red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/priceText" />
+
+        <EditText
+            android:id="@+id/amountText"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_above="@id/sellButton"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="80dp"
+            android:background="@color/wallet_background_color"
+            android:ems="10"
+            android:hint="Amount"
+            android:inputType="numberDecimal"
+            android:padding="10dp"
+            android:textColor="@color/wallet_text_color"
+            android:textColorHint="@color/wallet_text_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineChart" />
+
+        <EditText
+            android:id="@+id/priceText"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_above="@id/buyButton"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="40dp"
+            android:background="@color/wallet_background_color"
+            android:ems="10"
+            android:hint="Price"
+            android:inputType="numberDecimal"
+            android:padding="10dp"
+            android:textColor="@color/wallet_text_color"
+            android:textColorHint="@color/wallet_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineChart" />
+
+        <TextView
+            android:id="@+id/userAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/wallet_text_color"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toTopOf="@+id/priceText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.846"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/userBalance"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/wallet_text_color"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toTopOf="@+id/amountText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.073"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"

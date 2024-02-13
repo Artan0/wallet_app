@@ -73,11 +73,13 @@ class WalletActivity : AppCompatActivity() {
     }
 
     private fun onSendMoneyClicked() {
-        // Handle Send Money button click
+        val intent = Intent(this, TransactionActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onReceiveMoneyClicked() {
-        // Handle Receive Money button click
+        val intent = Intent(this, TransactionActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onAllTransactionsClicked() {
