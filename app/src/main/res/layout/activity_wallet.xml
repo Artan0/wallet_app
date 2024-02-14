@@ -36,17 +36,7 @@
         </androidx.cardview.widget.CardView>
 
 
-        <Button
-            android:id="@+id/addCardButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:onClick="onAddCardClicked"
-            android:text="Add Card"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.947"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
 
         <TextView
             android:id="@+id/balanceInfoText"
@@ -109,13 +99,24 @@
                 android:text="Receive" />
 
             <Button
-                android:id="@+id/allTransactionsButton"
+                android:id="@+id/addCardButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="History" />
+                android:layout_marginStart="8dp"
+                android:onClick="onAddCardClicked"
+                android:text="Add Card"
+                />
+
+<!--            <Button-->
+<!--                android:id="@+id/allTransactionsButton"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_columnWeight="1"-->
+<!--                android:layout_marginStart="8dp"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:text="History" />-->
         </GridLayout>
 
         <androidx.viewpager.widget.ViewPager

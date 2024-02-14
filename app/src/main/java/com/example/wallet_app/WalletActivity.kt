@@ -33,7 +33,7 @@ class WalletActivity : AppCompatActivity() {
     private lateinit var balanceTextView: TextView
     private lateinit var sendMoneyButton: Button
     private lateinit var receiveMoneyButton: Button
-    private lateinit var allTransactionsButton: Button
+//    private lateinit var allTransactionsButton: Button
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var addCardButton: Button
 
@@ -44,13 +44,13 @@ class WalletActivity : AppCompatActivity() {
         balanceTextView = findViewById(R.id.balanceTextView)
         sendMoneyButton = findViewById(R.id.sendMoneyButton)
         receiveMoneyButton = findViewById(R.id.receiveMoneyButton)
-        allTransactionsButton = findViewById(R.id.allTransactionsButton)
+//        allTransactionsButton = findViewById(R.id.allTransactionsButton)
         addCardButton = findViewById(R.id.addCardButton)
 
         addCardButton.setOnClickListener { showAddCardDialog() }
         sendMoneyButton.setOnClickListener { onSendMoneyClicked() }
         receiveMoneyButton.setOnClickListener { onReceiveMoneyClicked() }
-        allTransactionsButton.setOnClickListener { onAllTransactionsClicked() }
+//        allTransactionsButton.setOnClickListener { onAllTransactionsClicked() }
 
         retrieveUserWallet()
 
@@ -126,7 +126,7 @@ class WalletActivity : AppCompatActivity() {
         showAddCardDialog()
     }
 
-    fun onSubmitCardClicked(dialog: Dialog) {
+    private fun onSubmitCardClicked(dialog: Dialog) {
         val cardNumberEditText: EditText = dialog.findViewById(R.id.cardNumberEditText)
         val cardHolderNameEditText: EditText = dialog.findViewById(R.id.cardHolderNameEditText)
         val expirationDateEditText: EditText = dialog.findViewById(R.id.expirationDateEditText)
@@ -136,7 +136,6 @@ class WalletActivity : AppCompatActivity() {
         val cardHolderName = cardHolderNameEditText.text.toString()
         val expirationDate = expirationDateEditText.text.toString()
 
-        // Validate input fields before proceeding
         if (!isValidCardNumber(cardNumber) || !isValidExpirationDate(expirationDate)) {
             showToast("Invalid card information. Please check and try again.")
             return
@@ -144,8 +143,9 @@ class WalletActivity : AppCompatActivity() {
 
         val cvv = cvvEditText.text.toString()
 
-        // Check the number of existing cards
         val userId = FirebaseAuth.getInstance().currentUser?.uid
+        Log.d("Firestore", "Current User ID: $userId")
+
         if (userId != null) {
             val walletRef = FirebaseFirestore.getInstance().collection("wallets").document(userId)
 
@@ -155,21 +155,22 @@ class WalletActivity : AppCompatActivity() {
                         val wallet = document.toObject(Wallet::class.java)
                         wallet?.cards?.let { cards ->
                             if (cards.size < 3) {
-                                // Create a new Card object with the entered information
-                                val newCard = Card(cardNumber, cardHolderName, expirationDate, cvv)
+                                val newCard = Card(
+                                    cardNumber = cardNumber,
+                                    cardHolderName = cardHolderName,
+                                    expirationDate = expirationDate,
+                                    cvv = cvv
+                                )
 
-                                // Update the user's wallet with the new card
                                 walletRef.update("cards", FieldValue.arrayUnion(newCard))
                                     .addOnSuccessListener {
                                         Log.d("Firestore", "Card added successfully")
-                                        // Update UI or perform any additional actions
                                         showToast("Card added successfully")
                                         dialog.dismiss()
                                     }
                                     .addOnFailureListener { exception ->
                                         Log.e("Firestore", "Error updating wallet document", exception)
                                         showToast("Failed to add card. Please try again.")
-                                        // Handle failure scenario
                                     }
                             } else {
                                 showToast("Maximum 3 cards allowed.")
@@ -179,6 +180,7 @@ class WalletActivity : AppCompatActivity() {
                 }
         }
     }
+
 
     private fun isValidCardNumber(cardNumber: String): Boolean {
         val regex = Regex("^\\d{4} ?\\d{4} ?\\d{4} ?\\d{4}\$")

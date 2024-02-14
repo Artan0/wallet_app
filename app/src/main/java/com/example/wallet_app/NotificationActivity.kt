@@ -30,20 +30,20 @@ class NotificationActivity : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
         }
-        notificationAdapter = NotificationAdapter(getDummyNotifications())
+        notificationAdapter = NotificationAdapter(emptyList())
         binding.notificationRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.notificationRecyclerView.adapter = notificationAdapter
 
         retrieveUserNotifications()
     }
 
-    private fun getDummyNotifications(): List<Notification> {
-        return listOf(
-            Notification("New Message", "You have a new message", System.currentTimeMillis()),
-            Notification("Payment Received", "You received a payment", System.currentTimeMillis()),
-            Notification("Friend Request", "You have a new friend request", System.currentTimeMillis())
-        )
-    }
+//    private fun getDummyNotifications(): List<Notification> {
+//        return listOf(
+//            Notification("New Message", "You have a new message", System.currentTimeMillis()),
+//            Notification("Payment Received", "You received a payment", System.currentTimeMillis()),
+//            Notification("Friend Request", "You have a new friend request", System.currentTimeMillis())
+//        )
+//    }
 
     private fun retrieveUserNotifications() {
         if (userId != null) {

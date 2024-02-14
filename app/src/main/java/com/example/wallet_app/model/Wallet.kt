@@ -7,5 +7,5 @@ data class Wallet(
     @PropertyName("balance") var balance: Double = 0.0,
     @PropertyName("cryptoHoldings") var cryptoHoldings: MutableList<Crypto>? = null,
     @PropertyName("transactions") var transactions: List<Transaction>? = null,
-    @PropertyName("cards") var cards: MutableList<Card>? = null
+    @PropertyName("cards") var cards: List<Card>? = null
 )
