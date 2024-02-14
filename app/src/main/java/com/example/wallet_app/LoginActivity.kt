@@ -57,6 +57,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginUser(email: String, password: String) {
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (password.isEmpty() || password.length < 6) {
+            Toast.makeText(this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -68,10 +78,22 @@ class LoginActivity : AppCompatActivity() {
                         sendEmailVerification()
                     }
                 } else {
-                    Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    when {
+                        task.exception?.message?.contains("password") == true -> {
+                            Toast.makeText(this, "Incorrect password", Toast.LENGTH_SHORT).show()
+                        }
+                        task.exception?.message?.contains("no user record") == true -> {
+                            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
     }
+
+
 
     private fun sendEmailVerification() {
         val user = FirebaseAuth.getInstance().currentUser

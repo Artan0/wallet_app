@@ -71,6 +71,15 @@
             app:layout_constraintTop_toBottomOf="@+id/passwordEditText"
             app:layout_constraintVertical_bias="0.263" />
 
+<!--        <com.google.android.gms.common.SignInButton-->
+<!--            android:id="@+id/signInButton"-->
+<!--            android:layout_width="300dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/buttonRegister"/>-->
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/backButton"
             android:layout_width="match_parent"
@@ -80,7 +89,7 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttonRegister"
+            app:layout_constraintEnd_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonRegister"

@@ -40,6 +40,16 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser(email: String, password: String) {
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (password.isEmpty() || password.length < 6) {
+            Toast.makeText(this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val payId = generateUniquePayId() // Function to generate a unique hexadecimal payId
         val user = User(email, password, payId)
 
@@ -53,10 +63,24 @@ class RegisterActivity : AppCompatActivity() {
                     createUserDocument(user)
                     createWalletDocument()
                 } else {
-                    Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    when {
+                        task.exception?.message?.contains("email address") == true -> {
+                            Toast.makeText(this, "Invalid email address format", Toast.LENGTH_SHORT).show()
+                        }
+                        task.exception?.message?.contains("password") == true -> {
+                            Toast.makeText(this, "Weak password. Please use a stronger password", Toast.LENGTH_SHORT).show()
+                        }
+                        task.exception?.message?.contains("already in use") == true -> {
+                            Toast.makeText(this, "Email address already in use", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
     }
+
     private fun generateUniquePayId(): String {
         // unique hexadecimal payId with length 6
         val random = (0 until 1679616).random()
