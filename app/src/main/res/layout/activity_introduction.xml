@@ -9,6 +9,7 @@
     tools:context=".IntroductionActivity">
 
     <ImageView
+        android:id="@+id/imageIntroduction"
         android:layout_width="280dp"
         android:layout_height="255dp"
         android:background="@drawable/get_started"
@@ -25,10 +26,9 @@
         android:layout_height="160dp"
         app:layout_constraintBottom_toTopOf="@+id/getStartedButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.877" />
+        app:layout_constraintTop_toBottomOf="@id/imageIntroduction"
+        app:layout_constraintVertical_bias="0.977" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -38,7 +38,8 @@
         app:layout_constraintBottom_toTopOf="@+id/getStartedButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewPager" />
+        app:layout_constraintTop_toBottomOf="@id/viewPager"
+        app:layout_constraintVertical_bias="0.523" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/getStartedButton"
