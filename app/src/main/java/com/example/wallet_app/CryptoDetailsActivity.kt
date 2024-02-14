@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.wallet_app.model.Crypto
 import com.example.wallet_app.model.CryptoApiResponse
 import com.example.wallet_app.model.CryptoDetails
@@ -332,7 +333,7 @@ class CryptoDetailsActivity : AppCompatActivity() {
         val dataSet = LineDataSet(entries, "Price Data")
         dataSet.color = resources.getColor(R.color.white)
         dataSet.setDrawFilled(true)
-        dataSet.fillDrawable = resources.getDrawable(R.drawable.gradient_background)
+        dataSet.fillDrawable = ContextCompat.getDrawable(this, R.drawable.gradient_background)
         dataSet.fillAlpha = 200
 
         val legend = linechart.legend
