@@ -37,6 +37,9 @@ class HomeActivity : AppCompatActivity(){
     private lateinit var notificationButton: ImageButton
     private lateinit var notificationAdapter: NotificationAdapter
     private lateinit var paymentButton: Button
+    private lateinit var depositButton:Button
+    private lateinit var withDrawButton: Button
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,8 @@ class HomeActivity : AppCompatActivity(){
         sendMoneyButton = findViewById(R.id.sendMoneyButton)
         notificationButton = findViewById(R.id.notificationButton)
         paymentButton = findViewById(R.id.paymentButton)
+        depositButton = findViewById(R.id.depositButton)
+        withDrawButton = findViewById(R.id.withdrawButton)
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
@@ -78,6 +83,14 @@ class HomeActivity : AppCompatActivity(){
 
         paymentButton.setOnClickListener {
             val intent = Intent(this, TransactionActivity::class.java)
+            startActivity(intent)
+        }
+        depositButton.setOnClickListener {
+            val intent = Intent(this, DepositActivity::class.java)
+            startActivity(intent)
+        }
+        withDrawButton.setOnClickListener {
+            val intent = Intent(this, WithdrawActivity::class.java)
             startActivity(intent)
         }
 

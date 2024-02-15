@@ -16,5 +16,6 @@
     <string name="title_notifications">Notifications</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="generate_qr_code">Generate QR Code</string>
+    <string name="select_card">Select Card</string>
 
 </resources>

@@ -43,7 +43,8 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var balanceText: TextView
     private lateinit var backButton: ImageButton
     private lateinit var qrCodeImageView: ImageView
-
+    private lateinit var sendMoneyButton: ImageButton
+    private lateinit var notificationButton : ImageButton
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -59,6 +60,8 @@ class TransactionActivity : AppCompatActivity() {
         balanceText = findViewById(R.id.balanceTextView)
         backButton = findViewById(R.id.backButton)
         qrCodeImageView = findViewById(R.id.qrCodeImageView)
+        sendMoneyButton = findViewById(R.id.sendMoneyButton)
+        notificationButton = findViewById(R.id.notificationButton)
         val generateQrCodeButton: Button = findViewById(R.id.generateQrCodeButton)
         val scanQrCodeButton: Button = findViewById(R.id.scanQrCodeButton)
 
@@ -83,6 +86,16 @@ class TransactionActivity : AppCompatActivity() {
         scanQrCodeButton.setOnClickListener {
             initiateScan()
         }
+
+        sendMoneyButton.setOnClickListener {
+            val intent = Intent(this, TransactionActivity::class.java)
+            startActivity(intent)
+        }
+        notificationButton.setOnClickListener {
+            val intent = Intent(this, NotificationActivity::class.java)
+            startActivity(intent)
+        }
+
         retrieveUserWallet()
 
     }
