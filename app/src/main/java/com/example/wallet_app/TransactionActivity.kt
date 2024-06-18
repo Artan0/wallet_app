@@ -45,6 +45,7 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var qrCodeImageView: ImageView
     private lateinit var sendMoneyButton: ImageButton
     private lateinit var notificationButton : ImageButton
+    private lateinit var payIdTextView : TextView
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -62,6 +63,7 @@ class TransactionActivity : AppCompatActivity() {
         qrCodeImageView = findViewById(R.id.qrCodeImageView)
         sendMoneyButton = findViewById(R.id.sendMoneyButton)
         notificationButton = findViewById(R.id.notificationButton)
+        payIdTextView = findViewById(R.id.payId)
         val generateQrCodeButton: Button = findViewById(R.id.generateQrCodeButton)
         val scanQrCodeButton: Button = findViewById(R.id.scanQrCodeButton)
 
@@ -185,26 +187,63 @@ class TransactionActivity : AppCompatActivity() {
         return ""
     }
 
-    private fun retrieveUserWallet() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId != null) {
-            val db = Firebase.firestore
-            db.collection("wallets")
-                .document(userId)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        val wallet = document.toObject(Wallet::class.java)
-                        updateBalance(wallet?.balance ?: 0.0)
-                    } else {
-                        Log.d("Firestore", "No such document")
-                    }
+//    private fun retrieveUserWallet() {
+//        val userId = FirebaseAuth.getInstance().currentUser?.uid
+//        if (userId != null) {
+//            val db = Firebase.firestore
+//            db.collection("wallets")
+//                .document(userId)
+//                .get()
+//                .addOnSuccessListener { document ->
+//                    if (document != null && document.exists()) {
+//                        val wallet = document.toObject(Wallet::class.java)
+//                        updateBalance(wallet?.balance ?: 0.0)
+//                        val payId = document.getString("payId") ?: ""
+//                        payIdTextView.text = payId
+//                    } else {
+//                        Log.d("Firestore", "No such document")
+//                    }
+//                }
+//                .addOnFailureListener { exception ->
+//                    Log.e("Firestore", "Error getting wallet document", exception)
+//                }
+//        }
+//    }
+private fun retrieveUserWallet() {
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
+    if (userId != null) {
+        val db = Firebase.firestore
+        db.collection("wallets")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val wallet = document.toObject(Wallet::class.java)
+                    updateBalance(wallet?.balance ?: 0.0)
+                } else {
+                    Log.d("Firestore", "No such document")
                 }
-                .addOnFailureListener { exception ->
-                    Log.e("Firestore", "Error getting wallet document", exception)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Firestore", "Error getting wallet document", exception)
+            }
+
+        db.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val payId = document.getString("payId") ?: ""
+                    payIdTextView.text = "Pay ID: $payId"
+                } else {
+                    Log.d("Firestore", "No such document")
                 }
-        }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Firestore", "Error getting user document", exception)
+            }
     }
+}
     private fun updateBalance(balance: Double) {
         balanceText.text = String.format("Available Balance $%.2f", balance)
     }

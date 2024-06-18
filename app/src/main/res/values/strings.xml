@@ -9,7 +9,7 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="default_web_client_id">YOUR_DEFAULT_WEB_CLIENT_ID</string>
+    <string name="default_web_client_id">1075415988841-i93jopk0da31hto0muu7otelco16g9u2.apps.googleusercontent.com</string>
     <string name="title_activity_bottom_navigation">BottomNavigation</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

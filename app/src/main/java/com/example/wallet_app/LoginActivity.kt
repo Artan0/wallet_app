@@ -93,14 +93,11 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-
-
     private fun sendEmailVerification() {
         val user = FirebaseAuth.getInstance().currentUser
         user?.sendEmailVerification()
             ?.addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Email sent successfully
                     Toast.makeText(
                         this,
                         "Verification email sent. Please check your email.",
@@ -116,10 +113,9 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-
     private fun configureGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken(getString(R.string.default_web_client_id)) // Use your web client ID here
             .requestEmail()
             .build()
 
@@ -131,13 +127,18 @@ class LoginActivity : AppCompatActivity() {
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    private fun handleGoogleSignInResult(completedTask: com.google.android.gms.tasks.Task<GoogleSignInAccount>) {
-        try {
-            val account = completedTask.getResult(ApiException::class.java)!!
-            firebaseAuthWithGoogle(account.idToken!!)
-        } catch (e: ApiException) {
-            // Google Sign In failed
-            Toast.makeText(this, "Google Sign In failed", Toast.LENGTH_SHORT).show()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                // failed
+                Toast.makeText(this, "Google sign-in failed: ${e.statusCode}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -146,10 +147,10 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Google Sign In successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Google Sign-In successful", Toast.LENGTH_SHORT).show()
                     navigateToHome()
                 } else {
-                    Toast.makeText(this, "Google Sign In failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Google Sign-In failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
@@ -159,6 +160,7 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
     private fun navigateToRegister() {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
