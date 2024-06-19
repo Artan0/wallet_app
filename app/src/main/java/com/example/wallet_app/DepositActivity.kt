@@ -1,4 +1,3 @@
-// DepositActivity.kt
 package com.example.wallet_app
 
 import androidx.appcompat.app.AppCompatActivity
